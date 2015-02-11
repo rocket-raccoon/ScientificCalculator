@@ -19,7 +19,7 @@ class CalculatorView {
                         [".", "0", "⏎", "➗", "pi"]]
     
     //Creates the label at the top of the screen that holds all the numbers for the calculator
-    func setupNumberLabel(v: UIView, vc: ViewController) -> UILabel {
+    func setupNumberLabel(v: UIView, vc: CalculatorViewController) -> UILabel {
         //Instantiate the textlabel
         var textLabel = UILabel(frame: CGRect())
         textLabel.text = "0"
@@ -42,7 +42,7 @@ class CalculatorView {
     }
     
     //This will instantiate our grid of buttons
-    func setupButtons(v: UIView, vc: ViewController, numberLabel: UILabel) {
+    func setupButtons(v: UIView, vc: CalculatorViewController, numberLabel: UILabel) {
         
         //Get the number of rows and columns in our grid of buttons
         let rows = buttonGrid.count

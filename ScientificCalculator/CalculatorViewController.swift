@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  CalculatorViewController.swift
 //  ScientificCalculator
 //
 //  Created by Alberto Benavides on 2/7/15.
@@ -8,18 +8,17 @@
 
 import UIKit
 
-class ViewController: UIViewController {
-
+class CalculatorViewController: UIViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        //Set out the elements of the view
+        //Create the calculator view on screen
         var numberLabel = CalculatorView().setupNumberLabel(view, vc: self)
         CalculatorView().setupButtons(view, vc: self, numberLabel: numberLabel)
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
 
 
