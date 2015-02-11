@@ -14,6 +14,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         //Set out the elements of the view
         var numberLabel = CalculatorView().setupNumberLabel(view, vc: self)
+        CalculatorView().setupButtons(view, vc: self, numberLabel: numberLabel)
     }
     
     override func didReceiveMemoryWarning() {

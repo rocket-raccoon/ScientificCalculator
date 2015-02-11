@@ -13,10 +13,10 @@ import UIKit
 class CalculatorView {
     
     //This 2D grid will describe the layout of the buttons on the calculator view
-    let buttonGrid =   [["1", "2", "3"],
-                        ["4", "5", "6"],
-                        ["7", "8", "9"],
-                        ["", "0,", "🆗"]]
+    let buttonGrid =   [["1", "2", "3", "✖️", "√"],
+                        ["4", "5", "6", "➕", "sin"],
+                        ["7", "8", "9", "➖", "cos"],
+                        [".", "0", "⏎", "➗", "pi"]]
     
     //Creates the label at the top of the screen that holds all the numbers for the calculator
     func setupNumberLabel(v: UIView, vc: ViewController) -> UILabel {
@@ -33,8 +33,8 @@ class CalculatorView {
         let widthConst = NSLayoutConstraint(item: textLabel, attribute: .Width, relatedBy: .Equal, toItem: v, attribute: .Width, multiplier: 1.0, constant: 0.0)
         v.addConstraint(widthConst)
         //Set height equal to some constant
-        let heightConst = NSLayoutConstraint(item: textLabel, attribute: .Width, relatedBy: .Equal, toItem: nil, attribute: .NotAnAttribute, multiplier: 0.0, constant: 30.0)
-        v.addConstraint(widthConst)
+        let heightConst = NSLayoutConstraint(item: textLabel, attribute: .Height, relatedBy: .Equal, toItem: v, attribute: .Height, multiplier: 0.2, constant: 0.0)
+        v.addConstraint(heightConst)
         //Position the label right below top of the screen
         let verticalConst = NSLayoutConstraint.constraintsWithVisualFormat("V:[topLayoutGuide]-[textLabel]", options: nil, metrics: nil, views: ["topLayoutGuide": vc.topLayoutGuide, "textLabel": textLabel])
         v.addConstraints(verticalConst)
@@ -42,20 +42,66 @@ class CalculatorView {
     }
     
     //This will instantiate our grid of buttons
-    func setupButtons() {
+    func setupButtons(v: UIView, vc: ViewController, numberLabel: UILabel) {
+        
         //Get the number of rows and columns in our grid of buttons
         let rows = buttonGrid.count
         let cols = buttonGrid[0].count
+        
         //Iterate through each button on the grid and create it
-        /*for row in 0...0 {
-            for col in 0..cols-1 {
-                let button = UIButton(frame: CGRect())
-                button.setTitle(buttonGrid[row][col], forState: .TouchUpInside)
-                
+        var viewsDictionary = [String: AnyObject]()
+        viewsDictionary["numberLabel"] = numberLabel
+        viewsDictionary["blg"] = vc.bottomLayoutGuide
+        for row in 0...(rows-1) {
+            for col in 0...(cols-1) {
+                let button = UIButton()
+                button.setTitle(buttonGrid[row][col], forState: .Normal)
+                button.setTranslatesAutoresizingMaskIntoConstraints(false)
+                button.backgroundColor = .lightGrayColor()
+                button.setTitleColor(UIColor.blackColor(), forState: .Normal)
+                v.addSubview(button)
+                let viewName = "button\(row+1)x\(col+1)"
+                viewsDictionary[viewName] = button
             }
-        }*/
+        }
+        
+        //Create the clear button
+        let button = UIButton()
+        button.setTitle("Clear", forState: .Normal)
+        button.setTranslatesAutoresizingMaskIntoConstraints(false)
+        button.backgroundColor = .lightGrayColor()
+        button.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        v.addSubview(button)
+        viewsDictionary["clearButton"] = button
+        let clearButtonHorizontalConst = NSLayoutConstraint.constraintsWithVisualFormat("H:|-[clearButton]-|", options: nil, metrics: nil, views: viewsDictionary)
+        v.addConstraints(clearButtonHorizontalConst)
+        
+        //Build the horizontal constraints
+        for row in 1...(rows) {
+            let firstButton = "button\(row)x1"
+            var vfl = "H:|-[\(firstButton)(>=1,<=300)]"
+            for col in 2...(cols) {
+                let button = "button\(row)x\(col)"
+                vfl += "-[\(button)(==\(firstButton))]"
+            }
+            vfl += "-|"
+            let horizontalConst = NSLayoutConstraint.constraintsWithVisualFormat(vfl, options: nil, metrics: nil, views: viewsDictionary)
+            v.addConstraints(horizontalConst)
+        }
+        
+        //Build the vertical constraints
+        for col in 1...(cols) {
+            let firstButton = "button1x\(col)"
+            var vfl = "V:[numberLabel]-[clearButton(==\(firstButton))]-[\(firstButton)(>=1,<=300)]"
+            for row in 2...(rows) {
+                let button = "button\(row)x\(col)"
+                vfl += "-[\(button)(==\(firstButton))]"
+            }
+            vfl += "-[blg]"
+            let verticalConst = NSLayoutConstraint.constraintsWithVisualFormat(vfl, options: nil, metrics: nil, views: viewsDictionary)
+            v.addConstraints(verticalConst)
+        }
     }
-    
 }
 
 
