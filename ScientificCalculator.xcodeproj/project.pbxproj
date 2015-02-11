@@ -12,6 +12,7 @@
 		2DA7D4A21A871AC400E013A6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2DA7D4A11A871AC400E013A6 /* Images.xcassets */; };
 		2DA7D4A51A871AC400E013A6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2DA7D4A31A871AC400E013A6 /* LaunchScreen.xib */; };
 		2DA7D4B11A871AC400E013A6 /* ScientificCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA7D4B01A871AC400E013A6 /* ScientificCalculatorTests.swift */; };
+		2DA7D4BB1A8AB55E00E013A6 /* CalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA7D4BA1A8AB55E00E013A6 /* CalculatorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +35,7 @@
 		2DA7D4AA1A871AC400E013A6 /* ScientificCalculatorTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScientificCalculatorTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2DA7D4AF1A871AC400E013A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2DA7D4B01A871AC400E013A6 /* ScientificCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScientificCalculatorTests.swift; sourceTree = "<group>"; };
+		2DA7D4BA1A8AB55E00E013A6 /* CalculatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 			children = (
 				2DA7D49A1A871AC400E013A6 /* AppDelegate.swift */,
 				2DA7D49C1A871AC400E013A6 /* ViewController.swift */,
+				2DA7D4BA1A8AB55E00E013A6 /* CalculatorView.swift */,
 				2DA7D4A11A871AC400E013A6 /* Images.xcassets */,
 				2DA7D4A31A871AC400E013A6 /* LaunchScreen.xib */,
 				2DA7D4981A871AC400E013A6 /* Supporting Files */,
@@ -209,6 +212,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2DA7D49D1A871AC400E013A6 /* ViewController.swift in Sources */,
+				2DA7D4BB1A8AB55E00E013A6 /* CalculatorView.swift in Sources */,
 				2DA7D49B1A871AC400E013A6 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -395,6 +399,7 @@
 				2DA7D4B61A871AC400E013A6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		2DA7D4B71A871AC400E013A6 /* Build configuration list for PBXNativeTarget "ScientificCalculatorTests" */ = {
 			isa = XCConfigurationList;
@@ -403,6 +408,7 @@
 				2DA7D4B91A871AC400E013A6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
