@@ -13,14 +13,23 @@ import UIKit
 class CalculatorView {
     
     //This 2D grid will describe the layout of the buttons on the calculator view
-    let buttonGrid =   [["1", "2", "3", "✖️", "√"],
+    let buttonGrid =   [["7", "8", "9", "✖️", "√"],
                         ["4", "5", "6", "➕", "sin"],
-                        ["7", "8", "9", "➖", "cos"],
-                        [".", "0", "⏎", "➗", "pi"]]
+                        ["1", "2", "3", "➖", "cos"],
+                        ["0", ".", "⏎", "➗", "pi"]]
     
     //Creates the label at the top of the screen that holds all the numbers for the calculator
-    func setupNumberLabel(v: UIView, vc: CalculatorViewController) -> UILabel {
-        //Instantiate the textlabel
+    func setupTextLabels(v: UIView, vc: CalculatorViewController) -> (UILabel, UILabel) {
+        //Instantiate the history text label
+        var historyLabel = UILabel()
+        historyLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
+        historyLabel.font = UIFont(name: historyLabel.font.fontName, size: 16.0)
+        historyLabel.text = ""
+        historyLabel.textAlignment = .Right
+        historyLabel.layer.borderWidth = 1.0
+        historyLabel.backgroundColor = .yellowColor()
+        v.addSubview(historyLabel)
+        //Instantiate the text label
         var textLabel = UILabel(frame: CGRect())
         textLabel.text = "0"
         textLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
@@ -30,19 +39,24 @@ class CalculatorView {
         textLabel.backgroundColor = .cyanColor()
         v.addSubview(textLabel)
         //Set width equal to screen width
-        let widthConst = NSLayoutConstraint(item: textLabel, attribute: .Width, relatedBy: .Equal, toItem: v, attribute: .Width, multiplier: 1.0, constant: 0.0)
-        v.addConstraint(widthConst)
+        let widthConst1 = NSLayoutConstraint(item: textLabel, attribute: .Width, relatedBy: .Equal, toItem: v, attribute: .Width, multiplier: 1.0, constant: 0.0)
+        let widthConst2 = NSLayoutConstraint(item: historyLabel, attribute: .Width, relatedBy: .Equal, toItem: v, attribute: .Width, multiplier: 1.0, constant: 0.0)
+        v.addConstraint(widthConst1)
+        v.addConstraint(widthConst2)
         //Set height equal to some constant
-        let heightConst = NSLayoutConstraint(item: textLabel, attribute: .Height, relatedBy: .Equal, toItem: v, attribute: .Height, multiplier: 0.2, constant: 0.0)
-        v.addConstraint(heightConst)
+        let heightConst1 = NSLayoutConstraint(item: textLabel, attribute: .Height, relatedBy: .Equal, toItem: v, attribute: .Height, multiplier: 0.15, constant: 0.0)
+        let heightConst2 = NSLayoutConstraint(item: historyLabel, attribute: .Height, relatedBy: .Equal, toItem: v, attribute: .Height, multiplier: 0.05, constant: 0.0)
+        v.addConstraint(heightConst1)
+        v.addConstraint(heightConst2)
         //Position the label right below top of the screen
-        let verticalConst = NSLayoutConstraint.constraintsWithVisualFormat("V:[topLayoutGuide]-[textLabel]", options: nil, metrics: nil, views: ["topLayoutGuide": vc.topLayoutGuide, "textLabel": textLabel])
+        let viewsDictionary = ["topLayoutGuide": vc.topLayoutGuide, "textLabel": textLabel, "historyLabel": historyLabel]
+        let verticalConst = NSLayoutConstraint.constraintsWithVisualFormat("V:[topLayoutGuide]-[historyLabel]-[textLabel]", options: nil, metrics: nil, views: viewsDictionary)
         v.addConstraints(verticalConst)
-        return textLabel
+        return (textLabel, historyLabel)
     }
     
     //This will instantiate our grid of buttons
-    func setupButtons(v: UIView, vc: CalculatorViewController, numberLabel: UILabel) {
+    func setupButtons(v: UIView, vc: CalculatorViewController, numberLabel: UILabel, historyLabel: UILabel) {
         
         //Get the number of rows and columns in our grid of buttons
         let rows = buttonGrid.count
@@ -50,7 +64,9 @@ class CalculatorView {
         
         //Iterate through each button on the grid and create it
         var viewsDictionary = [String: AnyObject]()
+        viewsDictionary["tlg"] = vc.topLayoutGuide
         viewsDictionary["numberLabel"] = numberLabel
+        viewsDictionary["historyLabel"] = historyLabel
         viewsDictionary["blg"] = vc.bottomLayoutGuide
         for row in 0...(rows-1) {
             for col in 0...(cols-1) {
@@ -59,6 +75,7 @@ class CalculatorView {
                 button.setTranslatesAutoresizingMaskIntoConstraints(false)
                 button.backgroundColor = .lightGrayColor()
                 button.setTitleColor(UIColor.blackColor(), forState: .Normal)
+                button.addTarget(vc, action: "press:", forControlEvents: .TouchUpInside)
                 v.addSubview(button)
                 let viewName = "button\(row+1)x\(col+1)"
                 viewsDictionary[viewName] = button
@@ -71,6 +88,7 @@ class CalculatorView {
         button.setTranslatesAutoresizingMaskIntoConstraints(false)
         button.backgroundColor = .lightGrayColor()
         button.setTitleColor(UIColor.blackColor(), forState: .Normal)
+        button.addTarget(vc, action: "press:", forControlEvents: .TouchUpInside)
         v.addSubview(button)
         viewsDictionary["clearButton"] = button
         let clearButtonHorizontalConst = NSLayoutConstraint.constraintsWithVisualFormat("H:|-[clearButton]-|", options: nil, metrics: nil, views: viewsDictionary)
@@ -92,7 +110,7 @@ class CalculatorView {
         //Build the vertical constraints
         for col in 1...(cols) {
             let firstButton = "button1x\(col)"
-            var vfl = "V:[numberLabel]-[clearButton(==\(firstButton))]-[\(firstButton)(>=1,<=300)]"
+            var vfl = "V:[tlg]-[historyLabel]-[numberLabel]-[clearButton(==\(firstButton))]-[\(firstButton)(>=1,<=300)]"
             for row in 2...(rows) {
                 let button = "button\(row)x\(col)"
                 vfl += "-[\(button)(==\(firstButton))]"

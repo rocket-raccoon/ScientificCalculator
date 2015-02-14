@@ -13,6 +13,7 @@
 		2DA7D4A51A871AC400E013A6 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2DA7D4A31A871AC400E013A6 /* LaunchScreen.xib */; };
 		2DA7D4B11A871AC400E013A6 /* ScientificCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA7D4B01A871AC400E013A6 /* ScientificCalculatorTests.swift */; };
 		2DA7D4BB1A8AB55E00E013A6 /* CalculatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA7D4BA1A8AB55E00E013A6 /* CalculatorView.swift */; };
+		2DA7D4BD1A8BF82B00E013A6 /* CalculatorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DA7D4BC1A8BF82B00E013A6 /* CalculatorModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 		2DA7D4AF1A871AC400E013A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2DA7D4B01A871AC400E013A6 /* ScientificCalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScientificCalculatorTests.swift; sourceTree = "<group>"; };
 		2DA7D4BA1A8AB55E00E013A6 /* CalculatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorView.swift; sourceTree = "<group>"; };
+		2DA7D4BC1A8BF82B00E013A6 /* CalculatorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +81,7 @@
 			children = (
 				2DA7D49A1A871AC400E013A6 /* AppDelegate.swift */,
 				2DA7D49C1A871AC400E013A6 /* CalculatorViewController.swift */,
+				2DA7D4BC1A8BF82B00E013A6 /* CalculatorModel.swift */,
 				2DA7D4BA1A8AB55E00E013A6 /* CalculatorView.swift */,
 				2DA7D4A11A871AC400E013A6 /* Images.xcassets */,
 				2DA7D4A31A871AC400E013A6 /* LaunchScreen.xib */,
@@ -214,6 +217,7 @@
 				2DA7D49D1A871AC400E013A6 /* CalculatorViewController.swift in Sources */,
 				2DA7D4BB1A8AB55E00E013A6 /* CalculatorView.swift in Sources */,
 				2DA7D49B1A871AC400E013A6 /* AppDelegate.swift in Sources */,
+				2DA7D4BD1A8BF82B00E013A6 /* CalculatorModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
