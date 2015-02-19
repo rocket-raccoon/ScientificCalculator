@@ -87,7 +87,7 @@ class CalculatorViewController: UIViewController {
         println(calculatorModel.opHistory)
         println(calculatorModel.description)
         
-        historyLabel.text = calculatorModel.description
+        historyLabel.text = calculatorModel.description + "="
     }
     
     //Resets the screen back to zero
