@@ -15,6 +15,7 @@ class CalculatorModel {
         case Operand(Double)
         case UnaryOperation(String, Double->Double)
         case BinaryOperation(String, (Double, Double)->Double)
+        case Symbol(String)
         
         var description: String {
             get {
@@ -25,6 +26,8 @@ class CalculatorModel {
                     return symbol
                 case .BinaryOperation(let symbol, _):
                     return symbol
+                case .Symbol(let symbol):
+                    return symbol
                 }
             }
         }
@@ -32,28 +35,73 @@ class CalculatorModel {
     
     var ops = [String: Op]()
     var opStack = [Op]()
+    var opHistory = [Op]()
+    var variableValues = [String: Double]()
+    
+    func generateDescription(var equationString: String, var remainingOps: [Op]) -> (String, [Op]) {
+        if remainingOps.isEmpty {
+            return ("", remainingOps)
+        }
+        let lastOp = remainingOps.removeLast()
+        switch lastOp {
+        case .Operand(let number):
+            return (lastOp.description, remainingOps)
+        case .UnaryOperation(let symbol, _):
+            let (prevEquation, prevRemainingOps) = generateDescription("", remainingOps: remainingOps)
+            if prevEquation.hasPrefix("(") && prevEquation.hasSuffix(")") {
+                equationString = "\(lastOp.description)\(prevEquation)"
+            } else {
+                equationString = "\(lastOp.description)(\(prevEquation))"
+            }
+            return (equationString, prevRemainingOps)
+        case .BinaryOperation(let symbol, _):
+            let (prevEquation1, remainingOps1) = generateDescription("", remainingOps: remainingOps)
+            let (prevEquation2, remainingOps2) = generateDescription("", remainingOps: remainingOps1)
+            equationString = "(\(prevEquation2)\(symbol)\(prevEquation1))"
+            return (equationString, remainingOps2)
+        case .Symbol(let symbol):
+            return (symbol, remainingOps)
+        }
+    }
+    
+    var description: String {
+        get {
+            let (equationString, remainingOps) = generateDescription("", remainingOps: opHistory)
+            return equationString
+        }
+    }
     
     init() {
+        //Initialize the known operations
         ops["➗"] = Op.BinaryOperation("➗") { $1 / $0 }
-        ops["✖️"] = Op.BinaryOperation("➗", *)
+        ops["✖️"] = Op.BinaryOperation("✖️", *)
         ops["➕"] = Op.BinaryOperation("➕", +)
         ops["➖"] = Op.BinaryOperation("➖") { $1 - $0 }
         ops["√"] = Op.UnaryOperation("√", sqrt)
         ops["cos"] = Op.UnaryOperation("cos", cos)
         ops["sin"] = Op.UnaryOperation("sin", sin)
+        //Initialize the known variables (symbols)
+        variableValues["pi"] = M_PI
+    }
+    
+    func pushOperand(symbol: String) {
+        opStack.append(Op.Symbol(symbol))
+        opHistory.append(Op.Symbol(symbol))
     }
     
     func pushOperand(operand: Double) {
         opStack.append(Op.Operand(operand))
+        opHistory.append(Op.Operand(operand))
     }
     
     func pushOperation(operand: String) {
         if let op = ops[operand] {
             opStack.append(op)
+            opHistory.append(op)
         }
     }
     
-    func evaluate(result: Double, var remainingOps: [Op]) -> (Double, [Op]){
+    func evaluate(result: Double, var remainingOps: [Op]) -> (Double, [Op]) {
         let op = remainingOps.removeLast()
         switch op {
         case .Operand(let number):
@@ -65,14 +113,18 @@ class CalculatorModel {
             var (number1, results1) = evaluate(0, remainingOps: remainingOps)
             var (number2, results2) = evaluate(0, remainingOps: results1)
             return (binaryOperation(number1,number2), results2)
-        default:
-            return (-1, remainingOps)
+        case .Symbol(let symbolName):
+            if let symbolValue = variableValues[symbolName] {
+                return (symbolValue, remainingOps)
+            } else {
+                return (-1, remainingOps)
+            }
         }
     }
     
-    func calculate() -> Double {
+    func calculate() -> Double? {
         var (number, ops) = evaluate(0, remainingOps: opStack)
-        opStack = [Op.Operand(number)]
+        opStack = ops + [Op.Operand(number)]
         return number
     }
     

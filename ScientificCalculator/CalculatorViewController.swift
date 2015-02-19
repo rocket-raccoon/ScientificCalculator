@@ -14,7 +14,6 @@ class CalculatorViewController: UIViewController {
     var numberLabel: UILabel!
     var calculatorModel = CalculatorModel()
     var isTyping = false
-    var hasEnteredNumber = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,59 +30,64 @@ class CalculatorViewController: UIViewController {
     
     //This routes the button press on the calculator to the correct function to process it
     func press(sender: UIButton) {
+        
         var pressedButtonText = sender.titleLabel!.text!
         var calculatorText = numberLabel.text!
         var historyText = historyLabel.text!
-        historyLabel.text = historyText + pressedButtonText
+        
         switch pressedButtonText {
             case "Clear":
                 clearScreen()
                 isTyping = false
             case ".":
                 if calculatorText.rangeOfString(pressedButtonText, options: nil, range: nil, locale: nil) == nil {
-                    appendToScreen(calculatorText, s2: pressedButtonText)
+                    numberLabel.text = calculatorText + pressedButtonText
                 }
-            case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "pi":
-                if pressedButtonText == "pi" {
-                    pressedButtonText = "\(M_PI)"
-                }
+            case "0", "1", "2", "3", "4", "5", "6", "7", "8", "9":
                 if isTyping {
-                    appendToScreen(calculatorText, s2: pressedButtonText)
+                    numberLabel.text = calculatorText + pressedButtonText
                 } else {
-                    appendToScreen("", s2: pressedButtonText)
+                    numberLabel.text = pressedButtonText
                     isTyping = true
                 }
-            case "✖️", "➕", "➖", "➗":
-                if isTyping && hasEnteredNumber {
+            case "✖️", "➕", "➖", "➗", "√", "sin", "cos":
+                if isTyping {
                     let calculatorDouble = NSString(string: calculatorText).doubleValue
                     calculatorModel.pushOperand(calculatorDouble)
-                    calculatorModel.pushOperation(pressedButtonText)
-                    let result = calculatorModel.calculate()
-                    numberLabel.text = "\(result)"
+                    isTyping = false
                 }
-                isTyping = false
-                println(calculatorModel.opStack)
-            case "√", "sin", "cos":
-                if hasEnteredNumber {
-                    calculatorModel.pushOperation(pressedButtonText)
-                    let result = calculatorModel.calculate()
-                    numberLabel.text = "\(result)"
-                    println(calculatorModel.opStack)
+                calculatorModel.pushOperation(pressedButtonText)
+                let result = calculatorModel.calculate()
+                if let interpretableResult = result {
+                    numberLabel.text = "\(interpretableResult)"
+                } else {
+                    clearScreen()
+                }
+            case "pi":
+                if isTyping {
+                    let calculatorDouble = NSString(string: calculatorText).doubleValue
+                    calculatorModel.pushOperand(calculatorDouble)
+                    isTyping = false
+                }
+                calculatorModel.pushOperand(pressedButtonText)
+                let result = calculatorModel.calculate()
+                if let interpretableResult = result {
+                    numberLabel.text = "\(interpretableResult)"
+                } else {
+                    clearScreen()
                 }
             case "⏎":
                 isTyping = false
-                hasEnteredNumber = true
                 let calculatorDouble = NSString(string: calculatorText).doubleValue
-                if calculatorModel.opStack.isEmpty {
-                    calculatorModel.pushOperand(calculatorDouble)
-                } else {
-                    calculatorModel.opStack.removeLast()
-                    calculatorModel.pushOperand(calculatorDouble)
-                }
-                println(calculatorModel.opStack)
+                calculatorModel.pushOperand(calculatorDouble)
             default:
                 numberLabel.text = pressedButtonText
         }
+        //println(calculatorModel.opStack)
+        println(calculatorModel.opHistory)
+        println(calculatorModel.description)
+        
+        historyLabel.text = calculatorModel.description
     }
     
     //Resets the screen back to zero
@@ -91,11 +95,6 @@ class CalculatorViewController: UIViewController {
         numberLabel.text = "0"
         historyLabel.text = ""
         calculatorModel.opStack.removeAll(keepCapacity: false)
-    }
-    
-    //Sets the calculator text to be the concatenation of 2 strings s1 and s2
-    func appendToScreen(s1: String, s2: String) {
-        numberLabel.text = s1 + s2
     }
     
 }
