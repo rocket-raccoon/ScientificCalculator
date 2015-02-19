@@ -36,7 +36,7 @@ class CalculatorViewController: UIViewController {
         var historyText = historyLabel.text!
         
         switch pressedButtonText {
-            case "Clear":
+            case "C":
                 clearScreen()
                 isTyping = false
             case ".":
@@ -81,7 +81,7 @@ class CalculatorViewController: UIViewController {
                 let calculatorDouble = NSString(string: calculatorText).doubleValue
                 calculatorModel.pushOperand(calculatorDouble)
             default:
-                numberLabel.text = pressedButtonText
+                break
         }
         //println(calculatorModel.opStack)
         println(calculatorModel.opHistory)
@@ -95,6 +95,7 @@ class CalculatorViewController: UIViewController {
         numberLabel.text = "0"
         historyLabel.text = ""
         calculatorModel.opStack.removeAll(keepCapacity: false)
+        calculatorModel.opHistory.removeAll(keepCapacity: false)
     }
     
 }

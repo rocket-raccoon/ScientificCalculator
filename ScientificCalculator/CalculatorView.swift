@@ -13,10 +13,10 @@ import UIKit
 class CalculatorView {
     
     //This 2D grid will describe the layout of the buttons on the calculator view
-    let buttonGrid =   [["7", "8", "9", "✖️", "√"],
-                        ["4", "5", "6", "➕", "sin"],
-                        ["1", "2", "3", "➖", "cos"],
-                        ["0", ".", "⏎", "➗", "pi"]]
+    let buttonGrid =   [["7", "8", "9", "✖️", "√", "C"],
+                        ["4", "5", "6", "➕", "sin", "M"],
+                        ["1", "2", "3", "➖", "cos", "->M"],
+                        ["0", ".", "⏎", "➗", "pi", " "]]
     
     //Creates the label at the top of the screen that holds all the numbers for the calculator
     func setupTextLabels(v: UIView, vc: CalculatorViewController) -> (UILabel, UILabel) {
@@ -82,18 +82,6 @@ class CalculatorView {
             }
         }
         
-        //Create the clear button
-        let button = UIButton()
-        button.setTitle("Clear", forState: .Normal)
-        button.setTranslatesAutoresizingMaskIntoConstraints(false)
-        button.backgroundColor = .lightGrayColor()
-        button.setTitleColor(UIColor.blackColor(), forState: .Normal)
-        button.addTarget(vc, action: "press:", forControlEvents: .TouchUpInside)
-        v.addSubview(button)
-        viewsDictionary["clearButton"] = button
-        let clearButtonHorizontalConst = NSLayoutConstraint.constraintsWithVisualFormat("H:|-[clearButton]-|", options: nil, metrics: nil, views: viewsDictionary)
-        v.addConstraints(clearButtonHorizontalConst)
-        
         //Build the horizontal constraints
         for row in 1...(rows) {
             let firstButton = "button\(row)x1"
@@ -110,7 +98,7 @@ class CalculatorView {
         //Build the vertical constraints
         for col in 1...(cols) {
             let firstButton = "button1x\(col)"
-            var vfl = "V:[tlg]-[historyLabel]-[numberLabel]-[clearButton(==\(firstButton))]-[\(firstButton)(>=1,<=300)]"
+            var vfl = "V:[tlg]-[historyLabel]-[numberLabel]-[\(firstButton)(>=1,<=300)]"
             for row in 2...(rows) {
                 let button = "button\(row)x\(col)"
                 vfl += "-[\(button)(==\(firstButton))]"
