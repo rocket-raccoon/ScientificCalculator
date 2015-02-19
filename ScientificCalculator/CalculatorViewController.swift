@@ -38,6 +38,7 @@ class CalculatorViewController: UIViewController {
         switch pressedButtonText {
             case "C":
                 clearScreen()
+                calculatorModel.variableValues.removeValueForKey("M")
                 isTyping = false
             case ".":
                 if calculatorText.rangeOfString(pressedButtonText, options: nil, range: nil, locale: nil) == nil {
