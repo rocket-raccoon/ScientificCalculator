@@ -86,6 +86,13 @@ class CalculatorViewController: UIViewController {
             case "->M":
                 calculatorModel.variableValues["M"] = NSString(string: calculatorText).doubleValue
                 isTyping = false
+                let result = calculatorModel.calculate()
+                if let interpretableResult = result {
+                    numberLabel.text = "\(interpretableResult)"
+                } else {
+                    //clearScreen()
+                    numberLabel.text = ""
+                }
             default:
                 break
         }
