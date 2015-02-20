@@ -62,9 +62,10 @@ class CalculatorViewController: UIViewController {
                 if let interpretableResult = result {
                     numberLabel.text = "\(interpretableResult)"
                 } else {
-                    clearScreen()
+                    //clearScreen()
+                    numberLabel.text = ""
                 }
-            case "pi":
+            case "pi", "M":
                 if isTyping {
                     let calculatorDouble = NSString(string: calculatorText).doubleValue
                     calculatorModel.pushOperand(calculatorDouble)
@@ -75,12 +76,16 @@ class CalculatorViewController: UIViewController {
                 if let interpretableResult = result {
                     numberLabel.text = "\(interpretableResult)"
                 } else {
-                    clearScreen()
+                    //clearScreen()
+                    numberLabel.text = ""
                 }
             case "⏎":
                 isTyping = false
                 let calculatorDouble = NSString(string: calculatorText).doubleValue
                 calculatorModel.pushOperand(calculatorDouble)
+            case "->M":
+                calculatorModel.variableValues["M"] = NSString(string: calculatorText).doubleValue
+                isTyping = false
             default:
                 break
         }

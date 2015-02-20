@@ -106,31 +106,41 @@ class CalculatorModel {
         }
     }
     
-    func evaluate(result: Double, var remainingOps: [Op]) -> (Double, [Op]) {
-        let op = remainingOps.removeLast()
-        switch op {
-        case .Operand(let number):
-            return (number, remainingOps)
-        case .UnaryOperation(_, let unaryOperation):
-            var (number1, results1) = evaluate(0, remainingOps: remainingOps)
-            return (unaryOperation(number1), results1)
-        case .BinaryOperation(_, let binaryOperation):
-            var (number1, results1) = evaluate(0, remainingOps: remainingOps)
-            var (number2, results2) = evaluate(0, remainingOps: results1)
-            return (binaryOperation(number1,number2), results2)
-        case .Symbol(let symbolName):
-            if let symbolValue = variableValues[symbolName] {
-                return (symbolValue, remainingOps)
-            } else {
-                return (-1, remainingOps)
+    func evaluate(result: Double, var remainingOps: [Op]) -> (result: Double?, remainingOps: [Op]) {
+        if !remainingOps.isEmpty {
+            let op = remainingOps.removeLast()
+            switch op {
+            case .Operand(let number):
+                return (number, remainingOps)
+            case .UnaryOperation(_, let unaryOperation):
+                var evaluation = evaluate(0, remainingOps: remainingOps)
+                if let result = evaluation.result {
+                    return (unaryOperation(result), evaluation.remainingOps)
+                }
+            case .BinaryOperation(_, let binaryOperation):
+                var evaluation1 = evaluate(0, remainingOps: remainingOps)
+                if let result1 = evaluation1.result {
+                    var evaluation2 = evaluate(0, remainingOps: evaluation1.remainingOps)
+                    if let result2 = evaluation2.result {
+                        return (binaryOperation(result1, result2), evaluation2.remainingOps)
+                    }
+                }
+            case .Symbol(let symbolName):
+                if let symbolValue = variableValues[symbolName] {
+                    return (symbolValue, remainingOps)
+                }
             }
         }
+        return (nil, remainingOps)
     }
     
     func calculate() -> Double? {
-        var (number, ops) = evaluate(0, remainingOps: opStack)
-        opStack = ops + [Op.Operand(number)]
-        return number
+        var evaluation = evaluate(0, remainingOps: opStack)
+        if let result = evaluation.result {
+            opStack = evaluation.remainingOps + [Op.Operand(result)]
+            return result
+        }
+        return nil
     }
     
 }
