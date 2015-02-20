@@ -38,30 +38,30 @@ class CalculatorModel {
     var opHistory = [Op]()
     var variableValues = [String: Double]()
     
-    func generateDescription(var equationString: String, var remainingOps: [Op]) -> (String, [Op]) {
-        if remainingOps.isEmpty {
-            return ("", remainingOps)
-        }
-        let lastOp = remainingOps.removeLast()
-        switch lastOp {
-        case .Operand(let number):
-            return (lastOp.description, remainingOps)
-        case .UnaryOperation(let symbol, _):
-            let (prevEquation, prevRemainingOps) = generateDescription("", remainingOps: remainingOps)
-            if prevEquation.hasPrefix("(") && prevEquation.hasSuffix(")") {
-                equationString = "\(lastOp.description)\(prevEquation)"
-            } else {
-                equationString = "\(lastOp.description)(\(prevEquation))"
+    func generateDescription(var equationString: String, var remainingOps: [Op]) -> (equation: String, remainingOps: [Op]) {
+        if !remainingOps.isEmpty {
+            let lastOp = remainingOps.removeLast()
+            switch lastOp {
+            case .Operand(let number):
+                return (lastOp.description, remainingOps)
+            case .UnaryOperation(let symbol, _):
+                let (prevEquation, prevRemainingOps) = generateDescription("", remainingOps: remainingOps)
+                if prevEquation.hasPrefix("(") && prevEquation.hasSuffix(")") {
+                    equationString = "\(lastOp.description)\(prevEquation)"
+                } else {
+                    equationString = "\(lastOp.description)(\(prevEquation))"
+                }
+                return (equationString, prevRemainingOps)
+            case .BinaryOperation(let symbol, _):
+                let (prevEquation1, remainingOps1) = generateDescription("", remainingOps: remainingOps)
+                let (prevEquation2, remainingOps2) = generateDescription("", remainingOps: remainingOps1)
+                equationString = "(\(prevEquation2)\(symbol)\(prevEquation1))"
+                return (equationString, remainingOps2)
+            case .Symbol(let symbol):
+                return (symbol, remainingOps)
             }
-            return (equationString, prevRemainingOps)
-        case .BinaryOperation(let symbol, _):
-            let (prevEquation1, remainingOps1) = generateDescription("", remainingOps: remainingOps)
-            let (prevEquation2, remainingOps2) = generateDescription("", remainingOps: remainingOps1)
-            equationString = "(\(prevEquation2)\(symbol)\(prevEquation1))"
-            return (equationString, remainingOps2)
-        case .Symbol(let symbol):
-            return (symbol, remainingOps)
         }
+        return ("?", remainingOps)
     }
     
     var description: String {
