@@ -18,7 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
         
         var splitVC = GraphingCalculatorSplitViewController()
-        var masterVC = CalculatorViewController()
+        var masterVC = UINavigationController()
+        var calculatorVC = CalculatorViewController()
+        masterVC.pushViewController(calculatorVC, animated: false)
         var detailVC = GraphViewController()
         splitVC.viewControllers.append(masterVC)
         splitVC.viewControllers.append(detailVC)

@@ -90,6 +90,9 @@ class CalculatorViewController: UIViewController {
                 } else {
                     numberLabel.text = ""
                 }
+            case "Plot":
+                var detailVC = GraphViewController()
+                showDetailViewController(detailVC, sender: nil)
             default:
                 break
         }
