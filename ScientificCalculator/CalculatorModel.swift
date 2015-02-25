@@ -66,12 +66,22 @@ class CalculatorModel {
     
     var description: String {
         get {
-            var (equationString, remainingOps) = generateDescription("", remainingOps: opHistory)
-            if equationString.hasPrefix("(") && equationString.hasSuffix(")") {
-                let startIndex = advance(equationString.startIndex,1)
-                let endIndex = advance(equationString.endIndex,-2)
-                equationString = equationString.substringWithRange(startIndex...endIndex)
-            }
+            var equationString = ""
+            var remainingOps = opHistory
+            do {
+                var (newEquationString, remainingOps2) = generateDescription("", remainingOps: remainingOps)
+                if newEquationString.hasPrefix("(") && newEquationString.hasSuffix(")") {
+                    let startIndex = advance(newEquationString.startIndex,1)
+                    let endIndex = advance(newEquationString.endIndex,-2)
+                    newEquationString = newEquationString.substringWithRange(startIndex...endIndex)
+                }
+                if equationString == "" {
+                    equationString = newEquationString + equationString
+                } else {
+                    equationString = "\(newEquationString), \(equationString)"
+                }
+                remainingOps = remainingOps2
+            } while !remainingOps.isEmpty
             return equationString
         }
     }

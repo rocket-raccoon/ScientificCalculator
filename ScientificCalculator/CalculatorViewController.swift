@@ -62,7 +62,6 @@ class CalculatorViewController: UIViewController {
                 if let interpretableResult = result {
                     numberLabel.text = "\(interpretableResult)"
                 } else {
-                    //clearScreen()
                     numberLabel.text = ""
                 }
             case "pi", "M":
@@ -76,7 +75,6 @@ class CalculatorViewController: UIViewController {
                 if let interpretableResult = result {
                     numberLabel.text = "\(interpretableResult)"
                 } else {
-                    //clearScreen()
                     numberLabel.text = ""
                 }
             case "⏎":
@@ -90,20 +88,16 @@ class CalculatorViewController: UIViewController {
                 if let interpretableResult = result {
                     numberLabel.text = "\(interpretableResult)"
                 } else {
-                    //clearScreen()
                     numberLabel.text = ""
                 }
             default:
                 break
         }
-        //println(calculatorModel.opStack)
-        println(calculatorModel.opHistory)
-        println(calculatorModel.description)
-        
+        //Update the equation history in the very top bar
         historyLabel.text = calculatorModel.description + "="
     }
     
-    //Resets the screen back to zero
+    //Resets the screen back to zero and clear the operation stack
     func clearScreen() {
         numberLabel.text = "0"
         historyLabel.text = ""

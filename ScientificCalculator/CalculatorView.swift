@@ -16,7 +16,7 @@ class CalculatorView {
     let buttonGrid =   [["7", "8", "9", "✖️", "√", "C"],
                         ["4", "5", "6", "➕", "sin", "M"],
                         ["1", "2", "3", "➖", "cos", "->M"],
-                        ["0", ".", "⏎", "➗", "pi", " "]]
+                        ["0", ".", "⏎", "➗", "pi", "Plot"]]
     
     //Creates the label at the top of the screen that holds all the numbers for the calculator
     func setupTextLabels(v: UIView, vc: CalculatorViewController) -> (UILabel, UILabel) {

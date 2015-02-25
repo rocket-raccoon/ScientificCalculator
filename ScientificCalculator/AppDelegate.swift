@@ -16,9 +16,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
         // Override point for customization after application launch.
         window = UIWindow(frame: UIScreen.mainScreen().bounds)
-        var mainController = CalculatorViewController()
+        
+        var splitVC = GraphingCalculatorSplitViewController()
+        var masterVC = CalculatorViewController()
+        var detailVC = GraphViewController()
+        splitVC.viewControllers.append(masterVC)
+        splitVC.viewControllers.append(detailVC)
+        
         window?.makeKeyAndVisible()
-        window?.rootViewController = mainController
+        window?.rootViewController = splitVC
         window?.backgroundColor = .whiteColor()
         return true
     }
