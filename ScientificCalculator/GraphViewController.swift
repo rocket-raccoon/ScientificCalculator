@@ -18,6 +18,7 @@ class GraphViewController: UIViewController {
         let graphView = GraphView(frame: CGRect(x: 0.0, y: 0.0, width: view.bounds.width, height: view.bounds.height))
         graphView.backgroundColor = .whiteColor()
         graphView.addGestureRecognizer(UIPinchGestureRecognizer(target: graphView, action: "zoom:"))
+        graphView.addGestureRecognizer(UIPanGestureRecognizer(target: graphView, action: "pan:"))
         view.addSubview(graphView)
         
         //AxesDrawer().drawAxesInRect(view.bounds, origin: view.center, pointsPerUnit: 1.0)
