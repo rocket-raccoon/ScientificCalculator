@@ -12,13 +12,40 @@ class GraphView: UIView {
     
     var scale: CGFloat = 1.0 { didSet { setNeedsDisplay() } }
     var origin: CGPoint? { didSet { setNeedsDisplay() }}
+    var color = UIColor.blackColor()
     
     override func drawRect(rect: CGRect) {
         //If the origin's never been set or modified before, make it the center of the view
         if origin == nil {
             origin = self.center
         }
+        println(scale)
         AxesDrawer().drawAxesInRect(self.bounds, origin: origin!, pointsPerUnit: scale)
+        plotFunction()
+    }
+    
+    //Given a x-coord in pixel coordinates, returns the point in the graphs coordinate system
+    func convertFromPixelToScale(x: CGFloat) -> CGFloat {
+        let graphX = (x - origin!.x) / scale
+        let graphY = 0.5*(pow(graphX,2))
+        let pixelY = (-graphY * scale) + origin!.y
+        return pixelY
+    }
+    
+    //Draws the specified function on the graph view
+    func plotFunction() {
+        color.set()
+        let path = UIBezierPath()
+        var currentX: CGFloat = bounds.minX
+        var currentY = convertFromPixelToScale(currentX)
+        path.moveToPoint(CGPoint(x: currentX, y: currentY))
+        while currentX <= bounds.maxX {
+            currentX += CGFloat(1.0)
+            currentY = convertFromPixelToScale(currentX)
+            path.addLineToPoint(CGPoint(x: currentX, y: currentY))
+        }
+        path.lineWidth = 1.0
+        path.stroke()
     }
     
     //When a user drags across the screen, we will move the focus to that area of the graph
