@@ -13,7 +13,6 @@ class GraphingCalculatorSplitViewController: UISplitViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .whiteColor()
-        println(viewControllers.count)
     }
     
     override func didReceiveMemoryWarning() {

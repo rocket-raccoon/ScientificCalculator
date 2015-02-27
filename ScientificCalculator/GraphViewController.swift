@@ -12,7 +12,16 @@ class GraphViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .redColor()
+        view.backgroundColor = .whiteColor()
+        
+        //Set the graph view up
+        let graphView = GraphView(frame: CGRect(x: 0.0, y: 0.0, width: view.bounds.width, height: view.bounds.height))
+        graphView.backgroundColor = .whiteColor()
+        graphView.addGestureRecognizer(UIPinchGestureRecognizer(target: graphView, action: "zoom:"))
+        view.addSubview(graphView)
+        
+        //AxesDrawer().drawAxesInRect(view.bounds, origin: view.center, pointsPerUnit: 1.0)
+        
     }
     
     override func didReceiveMemoryWarning() {
