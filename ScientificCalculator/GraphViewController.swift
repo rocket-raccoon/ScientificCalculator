@@ -46,6 +46,7 @@ class GraphViewController: UIViewController, GraphViewDataSource {
         super.didReceiveMemoryWarning()
     }
     
+    //This will produce a small label in top left corner of graph view with the equation of function shown
     func createEquationTextLabel() {
         //Instantiate the text label
         var textLabel = UILabel()
@@ -53,15 +54,17 @@ class GraphViewController: UIViewController, GraphViewDataSource {
         textLabel.sizeToFit()
         textLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
         view.addSubview(textLabel)
+        
         //Set the vertical constraint
         let vertConst = NSLayoutConstraint.constraintsWithVisualFormat("V:[topLayoutGuide]-[textLabel]", options: nil, metrics: nil, views: ["textLabel": textLabel, "topLayoutGuide": topLayoutGuide])
         view.addConstraints(vertConst)
+        
         //Set the horizontal constraint
         let horizConst = NSLayoutConstraint.constraintsWithVisualFormat("H:|-[textLabel]", options: nil, metrics: nil, views: ["textLabel": textLabel])
         view.addConstraints(horizConst)
     }
     
-    func getData(x_coords: [CGFloat]) -> [CGFloat]? {
+    func getData(x_coords: [CGFloat]) -> [CGFloat?]? {
         
         if program != nil {
             
@@ -71,11 +74,14 @@ class GraphViewController: UIViewController, GraphViewDataSource {
             
             //Now, calculate the function values for the given x values
             calculatorModel.program = program!
-            var y_coords = [CGFloat]()
+            var y_coords = [CGFloat?]()
             for x in x_coords {
                 calculatorModel.variableValues["M"] = Double(x)
-                if let y = calculatorModel.calculate() {
-                    y_coords.append(CGFloat(y))
+                var y: CGFloat? = nil
+                if let y_as_double = calculatorModel.calculate() {
+                    y_coords.append(CGFloat(y_as_double))
+                } else {
+                    y_coords.append(y)
                 }
             }
             

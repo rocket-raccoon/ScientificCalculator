@@ -9,7 +9,7 @@
 import UIKit
 
 protocol GraphViewDataSource: class {
-    func getData(x: [CGFloat]) -> [CGFloat]?
+    func getData(x: [CGFloat]) -> [CGFloat?]?
 }
 
 class GraphView: UIView {
@@ -41,8 +41,20 @@ class GraphView: UIView {
         return (-y * scale) + origin!.y
     }
     
+    //Checks to see whether the given cgfloat optional is a discontinuity or not
+    func isDiscontinuity(number: CGFloat?) -> Bool {
+        if let actualNumber = number {
+            return (!actualNumber.isNormal && !actualNumber.isZero)
+        } else {
+            return true
+        }
+    }
+    
     //Draws the specified function on the graph view
     func plotFunction() {
+        
+        //Set a boolean to track if the graph is being drawn
+        var isDrawing = false
         
         //Get all the x values in pixel coordinates
         var pixelX = [CGFloat]()
@@ -55,18 +67,23 @@ class GraphView: UIView {
         
         //Pass the x graph coordinates to the data source delegate and return the y graph coordinates
         if let graphY = dataSource?.getData(graphX) {
-            
-            //Convert the y graph coordinates to pixel coordinates
-            var pixelY = graphY.map { self.convertGraphToPixel($0) }
-            
-            //Plot the x,y pixel pairs iteratively
             color.set()
             let path = UIBezierPath()
-            path.moveToPoint(CGPoint(x: pixelX[0], y: pixelY[0]))
-            for i in 1..<pixelX.count {
-                path.addLineToPoint(CGPoint(x: pixelX[i], y: pixelY[i]))
+            for i in 0..<graphY.count {
+                if !isDiscontinuity(graphY[i]) {
+                    let curPixelX = pixelX[i]
+                    let curPixelY = convertGraphToPixel(graphY[i]!)
+                    if isDrawing {
+                        path.addLineToPoint(CGPoint(x: curPixelX, y: curPixelY))
+                    } else {
+                        path.moveToPoint(CGPoint(x: curPixelX, y: curPixelY))
+                        isDrawing = true
+                    }
+                } else {
+                    isDrawing = false
+                }
             }
-            path.lineWidth = 3.0
+            path.lineWidth = 5.0
             path.stroke()
         }
     }

@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "ScientificCalculator/GraphView.swift"
-            timestampString = "446848614.127469"
+            timestampString = "446857280.450509"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
+            startingLineNumber = "61"
+            endingLineNumber = "61"
             landmarkName = "plotFunction()"
             landmarkType = "5">
          </BreakpointContent>
