@@ -23,9 +23,12 @@ class GraphView: UIView {
     //Wrapper function that draws the axis as well as the function on screen
     override func drawRect(rect: CGRect) {
         //If the origin's never been set or modified before, make it the center of the view
+        println("xxs")
+        println(origin)
         if origin == nil {
             origin = self.center
         }
+        println(origin)
         AxesDrawer().drawAxesInRect(self.bounds, origin: origin!, pointsPerUnit: scale)
         plotFunction()
     }

@@ -12,13 +12,17 @@ class GraphViewController: UIViewController, GraphViewDataSource {
     
     var program: AnyObject?
     var calculatorModel: CalculatorModel!
+    var graphView: GraphView!
+    var equationText: String!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .whiteColor()
         
         //Set the graph view up
-        let graphView = GraphView(frame: CGRect(x: 0.0, y: 0.0, width: view.bounds.width, height: view.bounds.height))
+        println("aa")
+        println(view.bounds.width)
+        graphView = GraphView(frame: CGRect(x: 0.0, y: 0.0, width: view.bounds.width, height: view.bounds.height))
         graphView.dataSource = self
         graphView.backgroundColor = .whiteColor()
         graphView.addGestureRecognizer(UIPinchGestureRecognizer(target: graphView, action: "zoom:"))
@@ -28,10 +32,33 @@ class GraphViewController: UIViewController, GraphViewDataSource {
         graphView.addGestureRecognizer(tapGestureRecognizer)
         view.addSubview(graphView)
         
+        //Set the equation text label up
+        createEquationTextLabel()
+    }
+    
+    //When the screen rotates, we want to reset the frame and center for the new orientation
+    override func didRotateFromInterfaceOrientation(fromInterfaceOrientation: UIInterfaceOrientation) {
+        graphView.frame = CGRect(x: 0.0, y: 0.0, width: view.bounds.width, height: view.bounds.height)
+        graphView.origin = nil
     }
     
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+    }
+    
+    func createEquationTextLabel() {
+        //Instantiate the text label
+        var textLabel = UILabel()
+        textLabel.text = equationText
+        textLabel.sizeToFit()
+        textLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
+        view.addSubview(textLabel)
+        //Set the vertical constraint
+        let vertConst = NSLayoutConstraint.constraintsWithVisualFormat("V:[topLayoutGuide]-[textLabel]", options: nil, metrics: nil, views: ["textLabel": textLabel, "topLayoutGuide": topLayoutGuide])
+        view.addConstraints(vertConst)
+        //Set the horizontal constraint
+        let horizConst = NSLayoutConstraint.constraintsWithVisualFormat("H:|-[textLabel]", options: nil, metrics: nil, views: ["textLabel": textLabel])
+        view.addConstraints(horizConst)
     }
     
     func getData(x_coords: [CGFloat]) -> [CGFloat]? {

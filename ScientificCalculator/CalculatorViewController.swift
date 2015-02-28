@@ -95,6 +95,7 @@ class CalculatorViewController: UIViewController {
                 var detailVC = GraphViewController()
                 detailVC.program = calculatorModel.program
                 detailVC.calculatorModel = calculatorModel
+                detailVC.equationText = historyText
                 showDetailViewController(detailVC, sender: nil)
             default:
                 break
