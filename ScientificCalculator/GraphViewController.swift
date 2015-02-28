@@ -35,6 +35,7 @@ class GraphViewController: UIViewController, GraphViewDataSource {
     }
     
     func getData(x_coords: [CGFloat]) -> [CGFloat]? {
+        
         if program != nil {
             
             //First, temporarily save the current program and saved variable for M while we calculate data values
@@ -54,7 +55,7 @@ class GraphViewController: UIViewController, GraphViewDataSource {
             //Replace the program and M values again
             calculatorModel.program = oldProgram
             calculatorModel.variableValues["M"] = oldM
-            return y_coords
+            return y_coords.count != 0 ? y_coords : nil
         }
         return nil
     }
