@@ -10,6 +10,27 @@ import Foundation
 
 class CalculatorModel {
     
+    var program: AnyObject {
+        get {
+            return opStack.map { $0.description }
+        }
+        set {
+            if let opSymbols = newValue as? Array<String> {
+                var newOpStack = [Op]()
+                for opSymbol in opSymbols {
+                    if let op = ops[opSymbol] {
+                        newOpStack.append(op)
+                    } else if let operand = NSNumberFormatter().numberFromString(opSymbol)?.doubleValue {
+                        newOpStack.append(.Operand(operand))
+                    } else {
+                        newOpStack.append(.Symbol(opSymbol))
+                    }
+                }
+                opStack = newOpStack
+            }
+        }
+    }
+    
     enum Op: Printable {
         
         case Operand(Double)
@@ -147,7 +168,6 @@ class CalculatorModel {
     func calculate() -> Double? {
         var evaluation = evaluate(0, remainingOps: opStack)
         if let result = evaluation.result {
-            opStack = evaluation.remainingOps + [Op.Operand(result)]
             return result
         }
         return nil

@@ -8,44 +8,64 @@
 
 import UIKit
 
+protocol GraphViewDataSource: class {
+    func getData(x: [CGFloat]) -> [CGFloat]?
+}
+
 class GraphView: UIView {
     
-    var scale: CGFloat = 1.0 { didSet { setNeedsDisplay() } }
+    weak var dataSource: GraphViewDataSource?
+    
+    var scale: CGFloat = 20.0 { didSet { setNeedsDisplay() } }
     var origin: CGPoint? { didSet { setNeedsDisplay() }}
     var color = UIColor.blackColor()
     
+    //Wrapper function that draws the axis as well as the function on screen
     override func drawRect(rect: CGRect) {
         //If the origin's never been set or modified before, make it the center of the view
         if origin == nil {
             origin = self.center
         }
-        println(scale)
         AxesDrawer().drawAxesInRect(self.bounds, origin: origin!, pointsPerUnit: scale)
         plotFunction()
     }
     
-    //Given a x-coord in pixel coordinates, returns the point in the graphs coordinate system
-    func convertFromPixelToScale(x: CGFloat) -> CGFloat {
-        let graphX = (x - origin!.x) / scale
-        let graphY = 0.5*(pow(graphX,2))
-        let pixelY = (-graphY * scale) + origin!.y
-        return pixelY
+    func convertPixelToGraph(x: CGFloat) -> CGFloat {
+        return (x-origin!.x) / scale
+    }
+    
+    func convertGraphToPixel(y: CGFloat) -> CGFloat {
+        return (-y * scale) + origin!.y
     }
     
     //Draws the specified function on the graph view
     func plotFunction() {
-        color.set()
-        let path = UIBezierPath()
-        var currentX: CGFloat = bounds.minX
-        var currentY = convertFromPixelToScale(currentX)
-        path.moveToPoint(CGPoint(x: currentX, y: currentY))
-        while currentX <= bounds.maxX {
-            currentX += CGFloat(1.0)
-            currentY = convertFromPixelToScale(currentX)
-            path.addLineToPoint(CGPoint(x: currentX, y: currentY))
+        
+        //Get all the x values in pixel coordinates
+        var pixelX = [CGFloat]()
+        for var x = bounds.minX; x <= bounds.maxX; x++ {
+            pixelX.append(x)
         }
-        path.lineWidth = 1.0
-        path.stroke()
+        
+        //Transform the pixel x values into graph coordinates
+        var graphX = pixelX.map { self.convertPixelToGraph($0) }
+        
+        //Pass the x graph coordinates to the data source delegate and return the y graph coordinates
+        if let graphY = dataSource?.getData(graphX) {
+            
+            //Convert the y graph coordinates to pixel coordinates
+            var pixelY = graphY.map { self.convertGraphToPixel($0) }
+            
+            //Plot the x,y pixel pairs iteratively
+            color.set()
+            let path = UIBezierPath()
+            path.moveToPoint(CGPoint(x: pixelX[0], y: pixelY[0]))
+            for i in 1..<pixelX.count {
+                path.addLineToPoint(CGPoint(x: pixelX[i], y: pixelY[i]))
+            }
+            path.lineWidth = 3.0
+            path.stroke()
+        }
     }
     
     //When a user drags across the screen, we will move the focus to that area of the graph

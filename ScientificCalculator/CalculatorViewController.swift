@@ -91,7 +91,10 @@ class CalculatorViewController: UIViewController {
                     numberLabel.text = ""
                 }
             case "Plot":
+                println(calculatorModel.program as Array<String>)
                 var detailVC = GraphViewController()
+                detailVC.program = calculatorModel.program
+                detailVC.calculatorModel = calculatorModel
                 showDetailViewController(detailVC, sender: nil)
             default:
                 break
