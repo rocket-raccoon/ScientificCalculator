@@ -13,7 +13,7 @@ class GraphViewController: UIViewController, GraphViewDataSource {
     var program: AnyObject?
     var calculatorModel: CalculatorModel!
     var graphView: GraphView!
-    var equationText: String!
+    var equationText: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -49,7 +49,7 @@ class GraphViewController: UIViewController, GraphViewDataSource {
     func createEquationTextLabel() {
         //Instantiate the text label
         var textLabel = UILabel()
-        textLabel.text = equationText
+        textLabel.text = equationText?.componentsSeparatedByString(",").last ?? ""
         textLabel.sizeToFit()
         textLabel.setTranslatesAutoresizingMaskIntoConstraints(false)
         view.addSubview(textLabel)
